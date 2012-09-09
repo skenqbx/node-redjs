@@ -1,13 +1,26 @@
 # redjs
-_Lighweight redis client for node.js_
+_Lighweight redis library for node.js_
 
 ```js
 Stability: 1 - Experimental
 ```
 
+### createDriver(opt_options)
+Create a new driver object. `Driver` extends `Client`.
+
+On load the all commands from `lib/commands.js` are populated on the drivers prototype.
+
+```
+var driver = redjs.createDriver();
+driver.connect(function() {
+  driver.set('testkey', 'a', function(err, reply) {
+    console.log(reply);
+  });
+});
+
 ## api
 ### createClient(opt_options)
-Create a new client object. `Client` is an `EventEmitter`.
+Create a new client object. `Client` extends `EventEmitter`.
 
 `opt_options` contains optional configuration:
 ```js
@@ -22,9 +35,12 @@ Create a new client object. `Client` is an `EventEmitter`.
 
 #### client.send(var_args, opt_callback)
 ```js
-client.send('SET', 'keyA', '1');
-client.send('KEYS', '*', function(err, reply) {
-  console.log(reply);
+var client = redjs.createClient();
+client.connect(function() {
+  client.send('SET', 'keyA', '1');
+  client.send('KEYS', '*', function(err, reply) {
+    console.log(reply);
+  });
 });
 ```
 Or use an `Array` as 1st argument
