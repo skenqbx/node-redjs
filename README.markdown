@@ -5,6 +5,10 @@ _Lighweight redis library for node.js_
 Stability: 1 - Experimental
 ```
 
+**TODO**
+ - deeply nested multi bulk replies (slowlog command)
+ - binary data
+ - re-connect
 
 ## api
 ### createDriver(opt_options)
@@ -14,7 +18,7 @@ On load the all commands from `lib/commands.js` are populated on the drivers pro
 
 ```js
 var driver = redjs.createDriver();
-driver.connect(function() {
+driver.connect(function(err) {
   driver.set('testkey', 'a', function(err, reply) {
     console.log(reply);
   });
