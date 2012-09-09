@@ -1,5 +1,6 @@
 {
   "name": "redjs",
+  "description": "Lighweight redis library for node.js",
   "version": "0.0.1",
   "author": {
     "name": "Malte-Thorben Bruns",
