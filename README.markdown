@@ -8,7 +8,7 @@ Stability: 1 - Experimental
 
 ## api
 ### createDriver(opt_options)
-Create a new driver object. `Driver` extends `Client`.
+Create a new driver object. `Driver` extends `events.EventEmitter`.
 
 On load the all commands from `lib/commands.js` are populated on the drivers prototype.
 
@@ -21,8 +21,10 @@ driver.connect(function() {
 });
 ```
 
+#### driver.connect(opt_callback)
+
 ### createClient(opt_options)
-Create a new client object. `Client` extends `EventEmitter`.
+Create a new client object. `Client` extends `events.EventEmitter`.
 
 `opt_options` contains optional configuration:
 ```js
@@ -33,7 +35,6 @@ Create a new client object. `Client` extends `EventEmitter`.
 ```
 
 #### client.connect(opt_callback)
-`opt_callback` is registered as listener for the 'connect' event.
 
 #### client.send(var_args, opt_callback)
 ```js
@@ -53,6 +54,9 @@ client.send(['REM', 'keyA', 'keyB', 'keyC'], function(err, replies) {
 ```
 
 #### Event: 'connect'
+#### Event: 'message'
+`function(channel, message)`
+
 #### Event: 'error'
 `function(err)`
 
