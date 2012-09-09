@@ -1,0 +1,12 @@
+{
+  "name": "redjs",
+  "version": "0.0.1",
+  "author": {
+    "name": "Malte-Thorben Bruns",
+    "email": "skenqbx@gmail.com"
+  },
+  "devDependencies": {
+    "jshint": "*",
+    "mocha": "*"
+  }
+}
