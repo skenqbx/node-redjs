@@ -5,20 +5,22 @@ _Lighweight redis library for node.js_
 Stability: 1 - Experimental
 ```
 
+
+## api
 ### createDriver(opt_options)
 Create a new driver object. `Driver` extends `Client`.
 
 On load the all commands from `lib/commands.js` are populated on the drivers prototype.
 
-```
+```js
 var driver = redjs.createDriver();
 driver.connect(function() {
   driver.set('testkey', 'a', function(err, reply) {
     console.log(reply);
   });
 });
+```
 
-## api
 ### createClient(opt_options)
 Create a new client object. `Client` extends `EventEmitter`.
 
