@@ -45,7 +45,7 @@ describe('Parser', function() {
       } while (++tx < replies.length);
     });
 
-    it('split', function(done) {
+    it('split 1', function(done) {
       var parser = new Parser();
       rx = tx = 0;
 
@@ -94,10 +94,8 @@ describe('Parser', function() {
         }
       });
 
-      var msg = '$4\r\nTest\r\n$-1\r\n';
-
-      parser.write(new Buffer(msg.substr(0, 11)));
-      parser.write(new Buffer(msg.substr(11)));
+      parser.write(new Buffer('$4\r\nTest\r\n$'));
+      parser.write(new Buffer('-1\r\n'));
     });
 
     it('split 4', function(done) {
@@ -110,10 +108,23 @@ describe('Parser', function() {
         }
       });
 
-      var msg = '*-1\r\n$1\r\na\r\n';
+      parser.write(new Buffer('*'));
+      parser.write(new Buffer('-1'));
+      parser.write(new Buffer('\r\n$1\r\na\r\n'));
+    });
 
-      parser.write(new Buffer(msg.substr(0, 1)));
-      parser.write(new Buffer(msg.substr(1)));
+    it('split 5', function(done) {
+      var parser = new Parser();
+      rx = tx = 0;
+
+      parser.on('reply', function(type, value) {
+        if (++rx === 2) {
+          done();
+        }
+      });
+
+      parser.write(new Buffer('$1\r\na'));
+      parser.write(new Buffer('\r\n$1\r\na\r\n'));
     });
   });
 });

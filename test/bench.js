@@ -94,6 +94,36 @@ describe('Benchmark', function() {
       });
     });
   });
+
+  describe('KEYS *', function() {
+    var client = redjs.createClient();
+
+    it('20001', function(done) {
+      client.connect(function(err) {
+        var tx = 0;
+        var d;
+
+        function pong(type, value) {
+          done();
+        }
+
+        d = process.hrtime();
+        do {
+          client.send('KEYS', '*');
+          client.send('KEYS', '*');
+          client.send('KEYS', '*');
+          client.send('KEYS', '*');
+          client.send('KEYS', '*');
+          client.send('KEYS', '*');
+          client.send('KEYS', '*');
+          client.send('KEYS', '*');
+          client.send('KEYS', '*');
+          client.send('KEYS', '*');
+        } while ((tx += 10) < 20000);
+        client.send('KEYS', '*', pong);
+      });
+    });
+  });
 });
 
 
