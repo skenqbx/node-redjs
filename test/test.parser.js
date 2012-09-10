@@ -10,7 +10,6 @@ var Parser = require('../lib/parser');
 
 describe('Parser', function() {
   describe('#write()', function() {
-    var parser = new Parser();
 
     var replies = [
       [['*1', '$4', 'Test'], ['multi', ['Test']]],
@@ -28,10 +27,12 @@ describe('Parser', function() {
       [['*2', '$-1', '$4', 'Test'], ['multi', [null, 'Test']]]
     ];
 
-    var tx = 0;
-    var rx = 0;
+    var tx, rx;
 
-    it('match', function(done) {
+    it('allinone', function(done) {
+      var parser = new Parser();
+      rx = tx = 0;
+
       parser.on('reply', function(type, value) {
         assert.deepEqual([type, value], replies[rx++][1]);
         if (replies.length === rx) {
@@ -42,6 +43,77 @@ describe('Parser', function() {
       do {
         parser.write(new Buffer(replies[tx][0].join('\r\n') + '\r\n'));
       } while (++tx < replies.length);
+    });
+
+    it('split', function(done) {
+      var parser = new Parser();
+      rx = tx = 0;
+
+      parser.on('reply', function(type, value) {
+        assert.deepEqual([type, value], replies[rx++][1]);
+        if (replies.length === rx) {
+          done();
+        }
+      });
+
+      var msg = '';
+
+      do {
+        msg += replies[tx][0].join('\r\n') + '\r\n';
+      } while (++tx < replies.length);
+
+      parser.write(new Buffer(msg.substr(0, 10)));
+      parser.write(new Buffer(msg.substr(10, 13)));
+      parser.write(new Buffer(msg.substr(23, 17)));
+      parser.write(new Buffer(msg.substr(40)));
+    });
+
+    it('split 2', function(done) {
+      var parser = new Parser();
+      rx = tx = 0;
+
+      parser.on('reply', function(type, value) {
+        if (++rx === 2) {
+          done();
+        }
+      });
+
+      var msg = '$4\r\nTest\r\n$1\r\na\r\n';
+
+      parser.write(new Buffer(msg.substr(0, 2)));
+      parser.write(new Buffer(msg.substr(2)));
+    });
+
+    it('split 3', function(done) {
+      var parser = new Parser();
+      rx = tx = 0;
+
+      parser.on('reply', function(type, value) {
+        if (++rx === 2) {
+          done();
+        }
+      });
+
+      var msg = '$4\r\nTest\r\n$-1\r\n';
+
+      parser.write(new Buffer(msg.substr(0, 11)));
+      parser.write(new Buffer(msg.substr(11)));
+    });
+
+    it('split 4', function(done) {
+      var parser = new Parser();
+      rx = tx = 0;
+
+      parser.on('reply', function(type, value) {
+        if (++rx === 2) {
+          done();
+        }
+      });
+
+      var msg = '*-1\r\n$1\r\na\r\n';
+
+      parser.write(new Buffer(msg.substr(0, 1)));
+      parser.write(new Buffer(msg.substr(1)));
     });
   });
 });
