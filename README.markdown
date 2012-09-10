@@ -10,11 +10,16 @@ Stability: 1 - Experimental
  - binary data
  - re-connect
 
+## install
+```
+npm install redjs
+```
+
 ## api
 ### createDriver(opt_options)
 Create a new driver object. `Driver` extends `events.EventEmitter`.
 
-On load the all commands from `lib/commands.js` are populated on the drivers prototype.
+On load all redis commands from `lib/commands.js` are populated on the drivers prototype.
 
 ```js
 var driver = redjs.createDriver();
@@ -31,6 +36,7 @@ driver.connect(function(err) {
 Create a new client object. `Client` extends `events.EventEmitter`.
 
 `opt_options` contains optional configuration:
+
 ```js
 {
   host: '127.0.0.1',
@@ -43,7 +49,7 @@ Create a new client object. `Client` extends `events.EventEmitter`.
 #### client.send(var_args, opt_callback)
 ```js
 var client = redjs.createClient();
-client.connect(function() {
+client.connect(function(err) {
   client.send('SET', 'keyA', '1');
   client.send('KEYS', '*', function(err, reply) {
     console.log(reply);
@@ -51,6 +57,7 @@ client.connect(function() {
 });
 ```
 Or use an `Array` as 1st argument
+
 ```js
 client.send(['REM', 'keyA', 'keyB', 'keyC'], function(err, replies) {
   console.log(replies);
@@ -65,14 +72,14 @@ client.send(['REM', 'keyA', 'keyB', 'keyC'], function(err, replies) {
 `function(err)`
 
 ### createParser()
-Create a new parser object. `Parser` is a `Stream`.
+Create a new parser object. `Parser` extends `Stream`.
 
 #### parser.write(buffer)
 
 #### Event: 'reply'
 `funtion(type, value)`
 
-`type` is one of `status`, `error`, `number`, `bulk`, `multi`.
+`type` is one of `status`, `error`, `number`, `bulk` or `multi`.
 
 `value` depends on type.
 
@@ -83,4 +90,30 @@ Create a new parser object. `Parser` is a `Stream`.
 ```
 make jshint
 make test
+```
+
+## license
+```
+(The MIT License)
+
+Copyright (c) 2012 Malte-Thorben Bruns <skenqbx@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
