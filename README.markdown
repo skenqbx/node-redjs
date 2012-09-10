@@ -1,14 +1,20 @@
 # redjs
-_A lightweight redis library for node.js_
+_A redis library for node.js_
 
 ```js
 Stability: 1 - Experimental
 ```
 
-**TODO**
- - deeply nested multi bulk replies (slowlog command)
- - binary data
- - re-connect
+#### Features
+ - redis unified request protocol
+ - requires no external dependencies
+ - dead simple api
+
+#### TODO
+ - deeply nested multi bulk replies (e.g. slowlog command)
+ - cluster & failover
+ - consistent hashing
+ - bulk binary data support
 
 ## install
 ```
@@ -40,7 +46,10 @@ Create a new client object. `Client` extends `events.EventEmitter`.
 ```js
 {
   host: '127.0.0.1',
-  port: 6379
+  port: 6379,
+  reconnect: true,
+  maxReconnectCount: 10,
+  reconnectInterval: 5000
 }
 ```
 
@@ -63,10 +72,24 @@ client.send(['REM', 'keyA', 'keyB', 'keyC'], function(err, replies) {
   console.log(replies);
 });
 ```
+#### client.close(opt_callback)
+`opt_callback` is registered as 'close' event listener.
 
 #### Event: 'connect'
 #### Event: 'message'
 `function(channel, message)`
+
+#### Event: 'reconnect'
+Emitted after trying to reconnect.
+
+`function(err)`
+
+`err` contains an `Error` if the reconnect failed.
+
+#### Event: 'close'
+Emitted when the underlying socket is fully closed.
+
+`function(reconnectCount)`
 
 #### Event: 'error'
 `function(err)`

@@ -29,12 +29,8 @@ describe('Client', function() {
   var c2 = new Client();
 
   describe('#connect()', function() {
-    it('client 1', function(done) {
+    it('to redis', function(done) {
       c1.connect(done);
-    });
-
-    it('client 2', function(done) {
-      c2.connect(done);
     });
   });
 
@@ -51,6 +47,12 @@ describe('Client', function() {
         assert.strictEqual(value, 'a');
         done();
       });
+    });
+  });
+
+  describe('#close()', function() {
+    it('on close', function(done) {
+      c1.close(done);
     });
   });
 });
