@@ -1,5 +1,5 @@
 # redjs
-_A lighweight redis library for node.js_
+_A lightweight redis library for node.js_
 
 ```js
 Stability: 1 - Experimental
