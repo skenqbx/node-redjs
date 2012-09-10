@@ -54,6 +54,7 @@ Create a new client object. `Client` extends `events.EventEmitter`.
 ```
 
 #### client.connect(opt_callback)
+#### client.reconnect()
 
 #### client.send(var_args, opt_callback)
 ```js
