@@ -1,7 +1,7 @@
 {
   "name": "redjs",
   "description": "A redis library for node.js",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": {
     "name": "Malte-Thorben Bruns",
     "email": "skenqbx@gmail.com"
