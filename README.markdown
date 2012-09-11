@@ -9,6 +9,7 @@ Stability: 1 - Experimental
  - redis unified request protocol
  - requires no external dependencies
  - dead simple api
+ - lazy-loading components
 
 #### TODO
  - deeply nested multi bulk replies (e.g. slowlog command)
@@ -22,21 +23,6 @@ npm install redjs
 ```
 
 ## api
-### createDriver(opt_options)
-Create a new driver object. `Driver` extends `events.EventEmitter`.
-
-On load all redis commands from `lib/commands.js` are populated on the drivers prototype.
-
-```js
-var driver = redjs.createDriver();
-driver.connect(function(err) {
-  driver.set('testkey', 'a', function(err, reply) {
-    console.log(reply);
-  });
-});
-```
-
-#### driver.connect(opt_callback)
 
 ### createClient(opt_options)
 Create a new client object. `Client` extends `events.EventEmitter`.
@@ -53,8 +39,50 @@ Create a new client object. `Client` extends `events.EventEmitter`.
 }
 ```
 
+#### Event: 'connect'
+
+`function()`
+
+#### Event: 'message'
+`function(channel, message)`
+
+#### Event: 'reconnect'
+Emitted after trying to reconnect.
+
+`function(err)`
+
+`err` contains an `Error` if the reconnect failed.
+
+#### Event: 'close'
+Emitted when the underlying socket is fully closed.
+
+`function()`
+
+#### Event: 'error'
+`function(err)`
+
+#### client.mode
+The current client mode `0` to `3`.
+
+#### client.modes
+`['OFFLINE', 'CONNECT', 'CLOSE', 'COMMAND']`
+
 #### client.connect(opt_callback)
+
 #### client.reconnect()
+Initiate reconnect manually.
+The client only tries to reconnect when at least one successful connection could be made.
+
+The only real use is when a client can't establish the initial connection:
+
+```js
+client.connect(function(err) {
+  if (err) {
+    client.reconnect();
+  }
+});
+```
+
 
 #### client.send(var_args, opt_callback)
 ```js
@@ -75,25 +103,6 @@ client.send(['REM', 'keyA', 'keyB', 'keyC'], function(err, replies) {
 ```
 #### client.close(opt_callback)
 `opt_callback` is registered as 'close' event listener.
-
-#### Event: 'connect'
-#### Event: 'message'
-`function(channel, message)`
-
-#### Event: 'reconnect'
-Emitted after trying to reconnect.
-
-`function(err)`
-
-`err` contains an `Error` if the reconnect failed.
-
-#### Event: 'close'
-Emitted when the underlying socket is fully closed.
-
-`function(reconnectCount)`
-
-#### Event: 'error'
-`function(err)`
 
 ### createParser()
 Create a new parser object. `Parser` extends `Stream`.
