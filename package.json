@@ -1,8 +1,9 @@
 {
   "name": "redjs",
   "description": "A redis library for node.js",
-  "keywords": ["redis", "database", "nosql", "publish", "subscribe"],
-  "version": "0.0.6",
+  "keywords": [
+      "redis", "database", "nosql", "client", "pubsub", "publish", "subscribe"],
+  "version": "0.0.7",
   "author": {
     "name": "Malte-Thorben Bruns",
     "email": "skenqbx@gmail.com"
