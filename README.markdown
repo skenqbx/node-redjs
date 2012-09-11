@@ -7,7 +7,6 @@ Stability: 1 - Experimental
 
 #### Features
  - redis unified request protocol
- - requires no external dependencies
  - dead simple api
  - lazy-loading components
 
@@ -69,11 +68,14 @@ The Client is a bare metal network client for redis. It provides only a basic in
 ```
 
 #### Event: 'connect'
-
 `function()`
 
 #### Event: 'message'
 `function(channel, message)`
+#### Event: 'subscribe'
+`function(channel, numSubscriptions)`
+#### Event: 'unsubscribe'
+`function(channel, numSubscriptions)`
 
 #### Event: 'reconnect'
 Emitted after trying to reconnect.
