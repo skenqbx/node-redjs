@@ -36,6 +36,33 @@ describe('Client', function() {
     });
   });
 
+  describe('example', function() {
+    it('should work, it\'s an example.', function(done) {
+      c1.send(['SET', 'keyA', 'listA']);
+      c1.send(['GET', 'keyA'], function(err, reply) {
+        if (err) {
+          return console.log(err.message);
+        }
+
+        // null is redis way to say: it does not exist.
+        if (reply !== null) {
+          c1.send(['RPUSH', reply, 'some', 'list', 'elements']);
+          c1.send(['LRANGE', reply, '0', '-1'], function(err, reply) {
+            if (err) {
+              done(err);
+            } else if (reply.indexOf('some') > -1 &&
+                reply.indexOf('list') > reply.indexOf('some')) {
+              done();
+            } else {
+              done(new Error('wrong data'));
+            }
+          });
+        }
+      });
+      c1.send('DEL', 'keyA', 'listA');
+    });
+  });
+
   describe('#send()', function() {
     it('set value', function(done) {
       assert.strictEqual(c1.mode, 3); // COMMAND

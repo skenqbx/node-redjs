@@ -22,10 +22,39 @@ Stability: 1 - Experimental
 npm install redjs
 ```
 
+## example
+```js
+var client = redjs.createClient();
+
+client.connect(function(err) {
+  if (err) {
+    return console.log(err.message);
+  }
+
+  client.send(['SET', 'keyA', 'listA']);
+  client.send(['GET', 'keyA'], function(err, reply) {
+    if (err) {
+      return console.log(err.message);
+    }
+
+    // null is redis way to say: it does not exist.
+    if (reply !== null) {
+      client.send(['RPUSH', reply, 'some', 'list', 'elements']);
+      client.send(['LRANGE', reply, '0', '-1'], function(err, reply) {
+        console.log(err, reply);
+      });
+    }
+  });
+});
+
+```
+
 ## api
 
 ### createClient(opt_options)
 Create a new client object. `Client` extends `events.EventEmitter`.
+
+The Client is a bare metal network client for redis. It provides only a basic interface for issuing commands, nothing fancy.
 
 `opt_options` contains optional configuration:
 
@@ -86,12 +115,9 @@ client.connect(function(err) {
 
 #### client.send(var_args, opt_callback)
 ```js
-var client = redjs.createClient();
-client.connect(function(err) {
-  client.send('SET', 'keyA', '1');
-  client.send('KEYS', '*', function(err, reply) {
-    console.log(reply);
-  });
+client.send('SET', 'keyA', '1');
+client.send('KEYS', '*', function(err, reply) {
+  console.log(err, reply);
 });
 ```
 Or use an `Array` as 1st argument
