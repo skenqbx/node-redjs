@@ -30,12 +30,16 @@ describe('Client', function() {
 
   describe('#connect()', function() {
     it('to redis', function(done) {
+      assert.strictEqual(c1.mode, 0); // OFFLINE
       c1.connect(done);
+      assert.strictEqual(c1.mode, 1); // CONNECT
     });
   });
 
   describe('#send()', function() {
     it('set value', function(done) {
+      assert.strictEqual(c1.mode, 3); // COMMAND
+
       c1.send(['SET', 'testkey', 'a'], function(err, value) {
         assert.strictEqual(value, 'OK');
         done();
@@ -53,6 +57,7 @@ describe('Client', function() {
   describe('#close()', function() {
     it('on close', function(done) {
       c1.close(done);
+      assert.strictEqual(c1.mode, 2); // CLOSE
     });
   });
 });
