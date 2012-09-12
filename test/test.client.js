@@ -81,6 +81,21 @@ describe('Client', function() {
     });
   });
 
+  describe('subscribe', function() {
+    it('event & callback', function(done) {
+      var rx = 0;
+
+      function ready() {
+        if (++rx == 2) {
+          done();
+        }
+      }
+
+      c1.once('subscribe', ready);
+      c1.send(['SUBSCRIBE', 'testChannel'], ready);
+    });
+  });
+
   describe('#close()', function() {
     it('on close', function(done) {
       c1.close(done);
