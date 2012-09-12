@@ -89,6 +89,9 @@ Emitted when the underlying socket is fully closed.
 
 `function()`
 
+#### Event: 'parser_error'
+`function(err)`
+
 #### Event: 'error'
 `function(err)`
 
@@ -140,10 +143,8 @@ client.send(['REM', 'keyA', 'keyB', 'keyC'], function(err, replies) {
 ### createParser()
 Create a new parser object. `Parser` extends `Stream`.
 
-#### parser.write(buffer)
-
 #### Event: 'reply'
-`funtion(type, value)`
+`function(type, value)`
 
 `type` is one of `status`, `error`, `number`, `bulk` or `multi`.
 
@@ -151,6 +152,23 @@ Create a new parser object. `Parser` extends `Stream`.
 
 #### Event: 'error'
 `funtion(err)`
+
+An example parser error object:
+```
+{ message: 'Unexpected character',
+  state: 1,
+  reply: 0, // reply type
+  type: 0,
+  c: 107 }
+```
+
+#### parser.states
+`['NONE', 'INIT', 'BULK_COUNT', 'MULTI_COUNT', 'TYPE', 'LINE', 'DATA']`
+
+#### parser.types
+`['NONE', 'STATUS', 'ERROR', 'NUMBER', 'BULK', 'MULTI']`
+
+#### parser.write(buffer)
 
 ## tests
 ```
