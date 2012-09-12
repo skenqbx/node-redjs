@@ -93,12 +93,17 @@ Emitted when the underlying socket is fully closed.
 `function(err)`
 
 #### client.mode
-The current client mode `0` to `3`.
+The current client mode, the values correspond with the array indexes of `client.modes`.
+
+```js
+console.log('mode id = %d name = %s', client.mode, client.modes[client.mode]);
+```
 
 #### client.modes
-`['OFFLINE', 'CONNECT', 'CLOSE', 'COMMAND']`
+`['OFFLINE', 'CONNECT', 'CLOSE', 'NORMAL']`
 
 #### client.connect(opt_callback)
+`opt_callback` is a `function(err)`.
 
 #### client.reconnect()
 Initiate reconnect manually.
