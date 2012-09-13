@@ -86,7 +86,7 @@ describe('Client', function() {
       var rx = 0;
 
       function ready() {
-        if (++rx == 2) {
+        if (++rx === 2) {
           done();
         }
       }

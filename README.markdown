@@ -154,6 +154,7 @@ Create a new parser object. `Parser` extends `Stream`.
 `funtion(err)`
 
 An example parser error object:
+
 ```
 { message: 'Unexpected character',
   state: 1,
