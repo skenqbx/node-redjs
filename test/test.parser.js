@@ -142,5 +142,43 @@ describe('Parser', function() {
       parser.write(new Buffer('$1\r\na'));
       parser.write(new Buffer('\r\n$1\r\na\r\n'));
     });
+
+    var msg = '';
+    for (tx = 0; tx < 100000; ++tx) {
+      msg += '+OK\r\n';
+    }
+    msg = new Buffer(msg);
+
+    var msg2 = '';
+    for (tx = 0; tx < 100000; ++tx) {
+      msg2 += '-ERR: What are you doing?!\r\n';
+    }
+    msg2 = new Buffer(msg2);
+
+    it('speed 1 (100k +OK)', function(done) {
+      var parser = new Parser();
+      rx = 0, tx = 100000;
+
+      parser.on('reply', function(type, value) {
+        if (++rx === tx) {
+          done();
+        }
+      });
+
+      parser.write(msg);
+    });
+
+    it('speed 2 (100k -ERR: What are you doing?!)', function(done) {
+      var parser = new Parser();
+      rx = 0, tx = 100000;
+
+      parser.on('reply', function(type, value) {
+        if (++rx === tx) {
+          done();
+        }
+      });
+
+      parser.write(msg2);
+    });
   });
 });
