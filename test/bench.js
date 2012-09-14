@@ -63,24 +63,26 @@ describe('Benchmark', function() {
         var tx = 0;
         var d;
 
+        var x = 'abc';
+
         function pong(type, value) {
           done();
         }
 
         d = process.hrtime();
         do {
-          client.send('SET', 'a', '1');
-          client.send('SET', 'a', '1');
-          client.send('SET', 'a', '1');
-          client.send('SET', 'a', '1');
-          client.send('SET', 'a', '1');
-          client.send('SET', 'a', '1');
-          client.send('SET', 'a', '1');
-          client.send('SET', 'a', '1');
-          client.send('SET', 'a', '1');
-          client.send('SET', 'a', '1');
+          client.send('SET', 'a', x);
+          client.send('SET', 'a', x);
+          client.send('SET', 'a', x);
+          client.send('SET', 'a', x);
+          client.send('SET', 'a', x);
+          client.send('SET', 'a', x);
+          client.send('SET', 'a', x);
+          client.send('SET', 'a', x);
+          client.send('SET', 'a', x);
+          client.send('SET', 'a', x);
         } while ((tx += 10) < 20000);
-        client.send('SET', 'a', '1', pong);
+        client.send('SET', 'a', x, pong);
       });
     });
   });
@@ -94,6 +96,9 @@ describe('Benchmark', function() {
         var d;
 
         function pong(type, value) {
+          if (value !== 'abc') {
+            throw new Error('mismatch');
+          }
           done();
         }
 
