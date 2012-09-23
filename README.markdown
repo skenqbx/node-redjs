@@ -11,10 +11,8 @@ Stability: 1 - Experimental
  - lazy-loading components
 
 #### TODO
- - deeply nested multi bulk replies (e.g. slowlog command)
  - cluster & failover
  - consistent hashing
- - bulk binary data support
 
 ## install
 ```
