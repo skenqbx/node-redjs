@@ -9,6 +9,7 @@ Stability: 1 - Experimental
  - redis unified request protocol
  - dead simple api
  - lazy-loading components
+ - [fast](https://gist.github.com/3773249)
 
 #### TODO
  - cluster & failover
