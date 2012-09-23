@@ -144,28 +144,12 @@ Create a new parser object. `Parser` extends `Stream`.
 #### Event: 'reply'
 `function(type, value)`
 
-`type` is one of `status`, `error`, `number`, `bulk` or `multi`.
+`type` is one of `43`, `45`, `58`, `36`, `42`.
 
-`value` depends on type.
+`value` depends on type and reply.
 
-#### Event: 'error'
+#### Event: 'parser_error'
 `funtion(err)`
-
-An example parser error object:
-
-```
-{ message: 'Unexpected character',
-  state: 1,
-  reply: 0, // reply type
-  type: 0,
-  c: 107 }
-```
-
-#### parser.states
-`['NONE', 'INIT', 'BULK_COUNT', 'MULTI_COUNT', 'TYPE', 'LINE', 'DATA']`
-
-#### parser.types
-`['NONE', 'STATUS', 'ERROR', 'NUMBER', 'BULK', 'MULTI']`
 
 #### parser.write(buffer)
 
