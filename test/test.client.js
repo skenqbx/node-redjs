@@ -25,29 +25,28 @@ var assert = require('assert');
 var Client = require('../lib/client');
 
 describe('Client', function() {
-  var c1 = new Client();
-  var c2 = new Client();
+  var client = new Client();
 
   describe('#connect()', function() {
     it('to redis', function(done) {
-      assert.strictEqual(c1.mode, 0); // OFFLINE
-      c1.connect(done);
-      assert.strictEqual(c1.mode, 1); // CONNECT
+      assert.strictEqual(client.mode, 0); // OFFLINE
+      client.connect(done);
+      assert.strictEqual(client.mode, 1); // CONNECT
     });
   });
 
   describe('example', function() {
     it('should work, it\'s an example.', function(done) {
-      c1.send(['SET', 'keyA', 'listA']);
-      c1.send(['GET', 'keyA'], function(err, reply) {
+      client.send(['SET', 'keyA', 'listA']);
+      client.send(['GET', 'keyA'], function(err, reply) {
         if (err) {
           return console.log(err.message);
         }
 
         // null is redis way to say: it does not exist.
         if (reply !== null) {
-          c1.send(['RPUSH', reply, 'some', 'list', 'elements']);
-          c1.send(['LRANGE', reply, '0', '-1'], function(err, reply) {
+          client.send(['RPUSH', reply, 'some', 'list', 'elements']);
+          client.send(['LRANGE', reply, '0', '-1'], function(err, reply) {
             if (err) {
               done(err);
             } else if (reply.indexOf('some') > -1 &&
@@ -59,22 +58,22 @@ describe('Client', function() {
           });
         }
       });
-      c1.send('DEL', 'keyA', 'listA');
+      client.send('DEL', 'keyA', 'listA');
     });
   });
 
   describe('#send()', function() {
     it('set value', function(done) {
-      assert.strictEqual(c1.mode, 3); // COMMAND
+      assert.strictEqual(client.mode, 3); // COMMAND
 
-      c1.send(['SET', 'testkey', 'a'], function(err, value) {
+      client.send(['SET', 'testkey', 'a'], function(err, value) {
         assert.strictEqual(value, 'OK');
         done();
       });
     });
 
     it('get value', function(done) {
-      c1.send(['GET', 'testkey'], function(err, value) {
+      client.send(['GET', 'testkey'], function(err, value) {
         assert.strictEqual(value, 'a');
         done();
       });
@@ -91,15 +90,15 @@ describe('Client', function() {
         }
       }
 
-      c1.once('subscribe', ready);
-      c1.send(['SUBSCRIBE', 'testChannel'], ready);
+      client.once('subscribe', ready);
+      client.send(['SUBSCRIBE', 'testChannel'], ready);
     });
   });
 
   describe('#close()', function() {
     it('on close', function(done) {
-      c1.close(done);
-      assert.strictEqual(c1.mode, 2); // CLOSE
+      client.close(done);
+      assert.strictEqual(client.mode, 2); // CLOSE
     });
   });
 });

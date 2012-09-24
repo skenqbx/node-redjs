@@ -41,7 +41,7 @@ describe('Parser', function() {
       [['$4', 'Test'], 'Test'],
       [['*2', '$-1', '$4', 'Test'], [null, 'Test']],
       [['*3', '*2', '$4', 'Test', ':-1', '*1', '*1', '$-1', '*2', ':1', '$-1'],
-          [['Test', '-1'], [[null]], ['1', null]]]
+          [['Test', -1], [[null]], [1, null]]]
     ];
 
     var tx, rx;
