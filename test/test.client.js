@@ -78,6 +78,25 @@ describe('Client', function() {
         done();
       });
     });
+
+    it('should return error', function(done) {
+      client.send('INVALID_COMMAND', function(err, value) {
+        assert(err);
+        assert.strictEqual(err.message,
+            'ERR unknown command \'INVALID_COMMAND\'');
+        done();
+      });
+    });
+
+    it('should emit error', function(done) {
+      client.once('error', function(err) {
+        assert(err);
+        assert.strictEqual(err.message,
+            'ERR unknown command \'INVALID_COMMAND\'');
+        done();
+      });
+      client.send('INVALID_COMMAND');
+    });
   });
 
   describe('subscribe', function() {
