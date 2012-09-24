@@ -48,7 +48,6 @@ client.connect(function(err) {
 ```
 
 ## api
-
 ### createClient(opt_options)
 Create a new client object. `Client` extends `events.EventEmitter`.
 
@@ -71,8 +70,10 @@ The Client is a bare metal network client for redis. It provides only a basic in
 
 #### Event: 'message'
 `function(channel, message)`
+
 #### Event: 'subscribe'
 `function(channel, numSubscriptions)`
+
 #### Event: 'unsubscribe'
 `function(channel, numSubscriptions)`
 
@@ -121,7 +122,6 @@ client.connect(function(err) {
 });
 ```
 
-
 #### client.send(var_args, opt_callback)
 ```js
 client.send('SET', 'keyA', '1');
@@ -158,6 +158,8 @@ Create a new parser object. `Parser` extends `Stream`.
 ```
 make jshint
 make test
+make install-jscoverage
+make test-cov
 ```
 
 ## license

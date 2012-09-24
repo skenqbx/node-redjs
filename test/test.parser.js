@@ -22,7 +22,7 @@
 /*global describe it*/
 
 var assert = require('assert');
-var Parser = require('../lib/parser');
+var redjs = require('../');
 
 describe('Parser', function() {
   describe('#write()', function() {
@@ -47,7 +47,7 @@ describe('Parser', function() {
     var tx, rx;
 
     it('allinone', function(done) {
-      var parser = new Parser();
+      var parser = redjs.createParser();
       rx = tx = 0;
 
       parser.on('reply', function(type, value) {
@@ -63,7 +63,7 @@ describe('Parser', function() {
     });
 
     it('split 1', function(done) {
-      var parser = new Parser();
+      var parser = redjs.createParser();
       rx = tx = 0;
 
       parser.on('reply', function(type, value) {
@@ -86,7 +86,7 @@ describe('Parser', function() {
     });
 
     it('split 2', function(done) {
-      var parser = new Parser();
+      var parser = redjs.createParser();
       rx = tx = 0;
 
       parser.on('reply', function(type, value) {
@@ -102,7 +102,7 @@ describe('Parser', function() {
     });
 
     it('split 3', function(done) {
-      var parser = new Parser();
+      var parser = redjs.createParser();
       rx = tx = 0;
 
       parser.on('reply', function(type, value) {
@@ -116,7 +116,7 @@ describe('Parser', function() {
     });
 
     it('split 4', function(done) {
-      var parser = new Parser();
+      var parser = redjs.createParser();
       rx = tx = 0;
 
       parser.on('reply', function(type, value) {
@@ -131,7 +131,7 @@ describe('Parser', function() {
     });
 
     it('split 5', function(done) {
-      var parser = new Parser();
+      var parser = redjs.createParser();
       rx = tx = 0;
 
       parser.on('reply', function(type, value) {
@@ -157,7 +157,7 @@ describe('Parser', function() {
     msg2 = new Buffer(msg2);
 
     it('speed 1 (100k +OK)', function(done) {
-      var parser = new Parser();
+      var parser = redjs.createParser();
       rx = 0, tx = 100000;
 
       parser.on('reply', function(type, value) {
@@ -170,7 +170,7 @@ describe('Parser', function() {
     });
 
     it('speed 2 (100k -ERR: What are you doing?!)', function(done) {
-      var parser = new Parser();
+      var parser = redjs.createParser();
       rx = 0, tx = 100000;
 
       parser.on('reply', function(type, value) {

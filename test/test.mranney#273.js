@@ -22,10 +22,10 @@
 /*global describe it*/
 
 var assert = require('assert');
-var Client = require('../lib/client');
+var redjs = require('../');
 
 describe('Client', function() {
-  var client = new Client();
+  var client = redjs.createClient();
 
   describe('#connect()', function() {
     it('to redis', function(done) {
