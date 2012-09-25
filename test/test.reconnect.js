@@ -24,33 +24,57 @@
 var assert = require('assert');
 var redjs = require('../');
 
-describe('mranney#288', function() {
+describe('reconnect', function() {
 
-  it('should work', function(done) {
-    var client = redjs.createClient();
+  var client = redjs.createClient();
+  var killer = redjs.createClient();
 
+  it('connect to invalid port #1', function(done) {
+    var client = redjs.createClient({port: 3333});
     client.connect(function(err) {
-      client.send('del', 'testHash1', 'testHash2', 'testHash3');
-      client.send('multi');
-      client.send('hset', 'testHash1', 'key1', 'value1');
-      client.send('hset', 'testHash2', 'key2', 'value2');
-      client.send('hset', 'testHash3', 'key3', 'value3');
-      client.send('exec', function(err, results) {
-        assert.deepEqual(results, [1, 1, 1]);
+      assert(err);
+      done();
+    });
+  });
 
-        client.send('multi');
-        client.send('hgetall', 'testHash1');
-        client.send('hgetall', 'testHash2');
-        client.send('hgetall', 'testHash3');
+  it('connect to invalid port #2', function(done) {
+    var client = redjs.createClient({port: 3333});
+    client.once('error', function(err) {
+      assert(err);
+      done();
+    });
+    client.connect();
+  });
 
-        client.send('exec', function(err, results) {
-          assert.deepEqual(
-              [['key1', 'value1'], ['key2', 'value2'], ['key3', 'value3']],
-              results);
-          done(err);
-        });
+  it('connect to redis', function(done) {
+    client.connect(function(err) {
+      killer.connect(function(err) {
+        done(err);
       });
     });
   });
 
+  it('reconnect #1', function(done) {
+    client.once('reconnect', function(err) {
+      done(err);
+    });
+    killer.send('CLIENT', 'KILL',
+        '127.0.0.1:' + client.connection.address().port);
+  });
+
+  it('reconnect #2', function(done) {
+    client.once('reconnect', function(err) {
+      done(err);
+    });
+    killer.send('CLIENT', 'KILL',
+        '127.0.0.1:' + client.connection.address().port);
+  });
+
+  it('reconnect #3', function(done) {
+    client.once('reconnect', function(err) {
+      done(err);
+    });
+    killer.send('CLIENT', 'KILL',
+        '127.0.0.1:' + client.connection.address().port);
+  });
 });

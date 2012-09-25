@@ -20,6 +20,6 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 'use strict';
 
-module.exports = process.env.REDJS_COV
-   ? require('./lib-cov')
-   : require('./lib');
+module.exports = process.env.REDJS_COV ?
+    require('./lib-cov') :
+    require('./lib');

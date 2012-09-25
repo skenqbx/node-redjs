@@ -24,31 +24,23 @@
 var assert = require('assert');
 var redjs = require('../');
 
-describe('Client', function() {
-  var client = redjs.createClient();
+describe('mranney#273', function() {
+  var key = 'ss_test';
+  var i, value = {'foo': 'bar'};
+  var values = ['zadd', key];
 
-  describe('#connect()', function() {
-    it('to redis', function(done) {
-      assert.strictEqual(client.mode, 0); // OFFLINE
-      client.connect(done);
-      assert.strictEqual(client.mode, 1); // CONNECT
-    });
-  });
+  for (i = 0; i < 400; i++ ){
+    value.foo += 'padding';
+  }
 
-  describe('mranney#273', function() {
-    var key = 'ss_test';
-    var i, value = {'foo': 'bar'};
-    for (i = 0; i < 400; i++ ){
-      value.foo += 'padding';
-    }
+  for (i = 0; i < 100; i++ ){
+    value.num = i;
+    values.push(i.toString(), JSON.stringify(value));
+  }
 
-    var values = ['zadd', key];
-    for (i = 0; i < 100; i++ ){
-      value.num = i;
-      values.push(i.toString(), JSON.stringify(value));
-    }
-
-    it('should work once', function(done) {
+  it('should work once', function(done) {
+    var client = redjs.createClient();
+    client.connect(function(err) {
       client.send(values, function(err, results) {
         client.send('zrange', key, '0', '100', function(err, results) {
           var good = 0, len = results.length;
@@ -63,8 +55,11 @@ describe('Client', function() {
         });
       });
     });
+  });
 
-    it('should work twice', function(done) {
+  it('should work twice', function(done) {
+    var client = redjs.createClient();
+    client.connect(function(err) {
       client.send(values, function(err, results) {
         client.send('zrange', key, '0', '100', function(err, results) {
           var good = 0, len = results.length;

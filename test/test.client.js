@@ -27,11 +27,38 @@ var redjs = require('../');
 describe('Client', function() {
   var client = redjs.createClient();
 
+  describe('#send()', function() {
+    it('when disconnected #1', function(done) {
+      assert.strictEqual(client.mode, 0); // OFFLINE
+      client.send('ABC', function(err) {
+        assert(err);
+        done();
+      });
+    });
+
+    it('when disconnected #2', function(done) {
+      assert.strictEqual(client.mode, 0); // OFFLINE
+      client.once('error', function(err) {
+        assert(err);
+        done();
+      });
+      client.send('ABC');
+    });
+  });
+
   describe('#connect()', function() {
     it('to redis', function(done) {
       assert.strictEqual(client.mode, 0); // OFFLINE
       client.connect(done);
       assert.strictEqual(client.mode, 1); // CONNECT
+    });
+
+    it('err when connected', function(done) {
+      client.connect();
+      client.connect(function(err) {
+        assert(err);
+        done();
+      });
     });
   });
 

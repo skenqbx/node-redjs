@@ -24,162 +24,160 @@
 var assert = require('assert');
 var redjs = require('../');
 
-describe('Parser', function() {
-  describe('#write()', function() {
+describe('parser', function() {
 
-    var replies = [
-      [['*1', '$4', 'Test'], ['Test']],
-      [[':0'], 0],
-      [[':836529662'], 836529662],
-      [['$62', 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'], 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'],
-      [[':-42.32'], -42.32],
-      [[':-1'], -1],
-      [['+OK'], 'OK'],
-      [['$-1'], null],
-      [['-Wtf?!'], 'Wtf?!'],
-      [['$1', 'X'], 'X'],
-      [['$4', 'Test'], 'Test'],
-      [['*2', '$-1', '$4', 'Test'], [null, 'Test']],
-      [['*3', '*2', '$4', 'Test', ':-1', '*1', '*1', '$-1', '*2', ':1', '*-1'],
-          [['Test', -1], [[null]], [1, null]]]
-    ];
+  var replies = [
+    [['*1', '$4', 'Test'], ['Test']],
+    [[':0'], 0],
+    [[':836529662'], 836529662],
+    [['$62', 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'], 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'],
+    [[':-42.32'], -42.32],
+    [[':-1'], -1],
+    [['+OK'], 'OK'],
+    [['$-1'], null],
+    [['-Wtf?!'], 'Wtf?!'],
+    [['$1', 'X'], 'X'],
+    [['$4', 'Test'], 'Test'],
+    [['*2', '$-1', '$4', 'Test'], [null, 'Test']],
+    [['*3', '*2', '$4', 'Test', ':-1', '*1', '*1', '$-1', '*2', ':1', '*-1'],
+        [['Test', -1], [[null]], [1, null]]]
+  ];
 
-    var tx, rx;
+  var tx, rx;
 
-    it('allinone', function(done) {
-      var parser = redjs.createParser();
-      rx = tx = 0;
+  it('allinone', function(done) {
+    var parser = redjs.createParser();
+    rx = tx = 0;
 
-      parser.on('reply', function(type, value) {
-        assert.deepEqual(value, replies[rx++][1]);
-        if (replies.length === rx) {
-          done();
-        }
-      });
-
-      do {
-        parser.write(new Buffer(replies[tx][0].join('\r\n') + '\r\n'));
-      } while (++tx < replies.length);
+    parser.on('reply', function(type, value) {
+      assert.deepEqual(value, replies[rx++][1]);
+      if (replies.length === rx) {
+        done();
+      }
     });
 
-    it('split 1', function(done) {
-      var parser = redjs.createParser();
-      rx = tx = 0;
+    do {
+      parser.write(new Buffer(replies[tx][0].join('\r\n') + '\r\n'));
+    } while (++tx < replies.length);
+  });
 
-      parser.on('reply', function(type, value) {
-        assert.deepEqual(value, replies[rx++][1]);
-        if (replies.length === rx) {
-          done();
-        }
-      });
+  it('split 1', function(done) {
+    var parser = redjs.createParser();
+    rx = tx = 0;
 
-      var msg = '';
-
-      do {
-        msg += replies[tx][0].join('\r\n') + '\r\n';
-      } while (++tx < replies.length);
-
-      parser.write(new Buffer(msg.substr(0, 10)));
-      parser.write(new Buffer(msg.substr(10, 13)));
-      parser.write(new Buffer(msg.substr(23, 17)));
-      parser.write(new Buffer(msg.substr(40)));
-    });
-
-    it('split 2', function(done) {
-      var parser = redjs.createParser();
-      rx = tx = 0;
-
-      parser.on('reply', function(type, value) {
-        if (++rx === 2) {
-          done();
-        }
-      });
-
-      var msg = '$4\r\nTest\r\n$1\r\na\r\n';
-
-      parser.write(new Buffer(msg.substr(0, 2)));
-      parser.write(new Buffer(msg.substr(2)));
-    });
-
-    it('split 3', function(done) {
-      var parser = redjs.createParser();
-      rx = tx = 0;
-
-      parser.on('reply', function(type, value) {
-        if (++rx === 2) {
-          done();
-        }
-      });
-
-      parser.write(new Buffer('$4\r\nTest\r\n$'));
-      parser.write(new Buffer('-1\r\n'));
-    });
-
-    it('split 4', function(done) {
-      var parser = redjs.createParser();
-      rx = tx = 0;
-
-      parser.on('reply', function(type, value) {
-        if (++rx === 2) {
-          done();
-        }
-      });
-
-      parser.write(new Buffer('*'));
-      parser.write(new Buffer('-1'));
-      parser.write(new Buffer('\r\n$1\r\na\r\n'));
-    });
-
-    it('split 5', function(done) {
-      var parser = redjs.createParser();
-      rx = tx = 0;
-
-      parser.on('reply', function(type, value) {
-        if (++rx === 2) {
-          done();
-        }
-      });
-
-      parser.write(new Buffer('$1\r\na'));
-      parser.write(new Buffer('\r\n$1\r\na\r\n'));
+    parser.on('reply', function(type, value) {
+      assert.deepEqual(value, replies[rx++][1]);
+      if (replies.length === rx) {
+        done();
+      }
     });
 
     var msg = '';
-    for (tx = 0; tx < 100000; ++tx) {
-      msg += '+OK\r\n';
-    }
-    msg = new Buffer(msg);
 
-    var msg2 = '';
-    for (tx = 0; tx < 100000; ++tx) {
-      msg2 += '-ERR: What are you doing?!\r\n';
-    }
-    msg2 = new Buffer(msg2);
+    do {
+      msg += replies[tx][0].join('\r\n') + '\r\n';
+    } while (++tx < replies.length);
 
-    it('speed 1 (100k +OK)', function(done) {
-      var parser = redjs.createParser();
-      rx = 0, tx = 100000;
+    parser.write(new Buffer(msg.substr(0, 10)));
+    parser.write(new Buffer(msg.substr(10, 13)));
+    parser.write(new Buffer(msg.substr(23, 17)));
+    parser.write(new Buffer(msg.substr(40)));
+  });
 
-      parser.on('reply', function(type, value) {
-        if (++rx === tx) {
-          done();
-        }
-      });
+  it('split 2', function(done) {
+    var parser = redjs.createParser();
+    rx = tx = 0;
 
-      parser.write(msg);
+    parser.on('reply', function(type, value) {
+      if (++rx === 2) {
+        done();
+      }
     });
 
-    it('speed 2 (100k -ERR: What are you doing?!)', function(done) {
-      var parser = redjs.createParser();
-      rx = 0, tx = 100000;
+    var msg = '$4\r\nTest\r\n$1\r\na\r\n';
 
-      parser.on('reply', function(type, value) {
-        if (++rx === tx) {
-          done();
-        }
-      });
+    parser.write(new Buffer(msg.substr(0, 2)));
+    parser.write(new Buffer(msg.substr(2)));
+  });
 
-      parser.write(msg2);
+  it('split 3', function(done) {
+    var parser = redjs.createParser();
+    rx = tx = 0;
+
+    parser.on('reply', function(type, value) {
+      if (++rx === 2) {
+        done();
+      }
     });
+
+    parser.write(new Buffer('$4\r\nTest\r\n$'));
+    parser.write(new Buffer('-1\r\n'));
+  });
+
+  it('split 4', function(done) {
+    var parser = redjs.createParser();
+    rx = tx = 0;
+
+    parser.on('reply', function(type, value) {
+      if (++rx === 2) {
+        done();
+      }
+    });
+
+    parser.write(new Buffer('*'));
+    parser.write(new Buffer('-1'));
+    parser.write(new Buffer('\r\n$1\r\na\r\n'));
+  });
+
+  it('split 5', function(done) {
+    var parser = redjs.createParser();
+    rx = tx = 0;
+
+    parser.on('reply', function(type, value) {
+      if (++rx === 2) {
+        done();
+      }
+    });
+
+    parser.write(new Buffer('$1\r\na'));
+    parser.write(new Buffer('\r\n$1\r\na\r\n'));
+  });
+
+  var msg = '';
+  for (tx = 0; tx < 100000; ++tx) {
+    msg += '+OK\r\n';
+  }
+  msg = new Buffer(msg);
+
+  var msg2 = '';
+  for (tx = 0; tx < 100000; ++tx) {
+    msg2 += '-ERR: What are you doing?!\r\n';
+  }
+  msg2 = new Buffer(msg2);
+
+  it('speed 1 (100k +OK)', function(done) {
+    var parser = redjs.createParser();
+    rx = 0, tx = 100000;
+
+    parser.on('reply', function(type, value) {
+      if (++rx === tx) {
+        done();
+      }
+    });
+
+    parser.write(msg);
+  });
+
+  it('speed 2 (100k -ERR: What are you doing?!)', function(done) {
+    var parser = redjs.createParser();
+    rx = 0, tx = 100000;
+
+    parser.on('reply', function(type, value) {
+      if (++rx === tx) {
+        done();
+      }
+    });
+
+    parser.write(msg2);
   });
 });
