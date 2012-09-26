@@ -6,10 +6,11 @@ Stability: 1 - Experimental
 ```
 
 #### Features
- - redis unified request protocol
+ - unified request protocol
+ - [fast](https://gist.github.com/3773249)
  - dead simple api
  - lazy-loading components
- - [fast](https://gist.github.com/3773249)
+ - ... and more than 95% test coverage
 
 ## install
 ```
@@ -31,10 +32,10 @@ client.connect(function(err) {
       return console.log(err.message);
     }
 
-    // null is redis way to say: it does not exist.
+    // null is redis's way to say: it does not exist.
     if (reply !== null) {
       client.call(['RPUSH', reply, 'some', 'list', 'elements']);
-      client.call(['LRANGE', reply, '0', '-1'], function(err, reply) {
+      client.call(['LRANGE', reply, 0, -1], function(err, reply) {
         console.log(err, reply);
       });
     }
@@ -49,7 +50,7 @@ Create a new client object. `Client` extends `events.EventEmitter`.
 
 The Client is a bare metal network client for redis. It provides only a basic interface for issuing commands, nothing fancy.
 
-`opt_options` contains optional configuration:
+`opt_options` contains optional configuration with the following defaults:
 
 ```js
 {
@@ -78,8 +79,6 @@ Emitted after trying to reconnect.
 
 `function(err)`
 
-`err` contains an `Error` if the reconnect failed.
-
 #### Event: 'close'
 Emitted when the underlying socket is fully closed.
 
@@ -102,13 +101,13 @@ console.log('mode id = %d name = %s', client.mode, client.modes[client.mode]);
 `['OFFLINE', 'CONNECT', 'CLOSE', 'NORMAL']`
 
 #### client.connect(opt_callback)
-`opt_callback` is a `function(err)`.
+`opt_callback` is an optional `function(err)`.
 
 #### client.reconnect()
-Initiate reconnect manually.
+Initiate reconnect
 The client only tries to reconnect when at least one successful connection could be made.
 
-The only real use is when a client can't establish the initial connection:
+The only use-case is when a client can't establish the initial connection:
 
 ```js
 client.connect(function(err) {
@@ -133,17 +132,17 @@ client.call(['REM', 'keyA', 'keyB', 'keyC'], function(err, replies) {
 });
 ```
 #### client.close(opt_callback)
-`opt_callback` is registered as 'close' event listener.
+`opt_callback` is an optional `function()` that is registered as 'close' event listener.
 
 ### createParser()
-Create a new parser object. `Parser` extends `Stream`.
+Creates a new parser object. `Parser` extends `Stream`.
 
 #### Event: 'reply'
 `function(type, value)`
 
-`type` is one of `43`, `45`, `58`, `36`, `42`.
+`type` is one of `43 (status)`, `45 (error)`, `58 (integer)`, `36 (bulk)` or `42 (multi-bulk)`.
 
-`value` depends on type and reply.
+`value` depends on type.
 
 #### Event: 'parser_error'
 `function(err)`
