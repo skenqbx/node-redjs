@@ -125,8 +125,8 @@ describe('parser', function() {
     });
 
     parser.write(new Buffer('*'));
-    parser.write(new Buffer('-1'));
-    parser.write(new Buffer('\r\n$1\r\na\r\n'));
+    parser.write(new Buffer('-1\r'));
+    parser.write(new Buffer('\n$1\r\na\r\n'));
   });
 
   it('split 5', function(done) {
