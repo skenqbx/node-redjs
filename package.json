@@ -15,6 +15,9 @@
     "type": "git",
     "url": "https://github.com/skenqbx/node-redjs.git"
   },
+  "scripts": {
+    "test": "mocha test/*.js"
+  },
   "devDependencies": {
     "jshint": "*",
     "mocha": "*"
