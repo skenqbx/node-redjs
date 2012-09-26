@@ -30,20 +30,20 @@ describe('mranney#288', function() {
     var client = redjs.createClient();
 
     client.connect(function(err) {
-      client.send('del', 'testHash1', 'testHash2', 'testHash3');
-      client.send('multi');
-      client.send('hset', 'testHash1', 'key1', 'value1');
-      client.send('hset', 'testHash2', 'key2', 'value2');
-      client.send('hset', 'testHash3', 'key3', 'value3');
-      client.send('exec', function(err, results) {
+      client.call('del', 'testHash1', 'testHash2', 'testHash3');
+      client.call('multi');
+      client.call('hset', 'testHash1', 'key1', 'value1');
+      client.call('hset', 'testHash2', 'key2', 'value2');
+      client.call('hset', 'testHash3', 'key3', 'value3');
+      client.call('exec', function(err, results) {
         assert.deepEqual(results, [1, 1, 1]);
 
-        client.send('multi');
-        client.send('hgetall', 'testHash1');
-        client.send('hgetall', 'testHash2');
-        client.send('hgetall', 'testHash3');
+        client.call('multi');
+        client.call('hgetall', 'testHash1');
+        client.call('hgetall', 'testHash2');
+        client.call('hgetall', 'testHash3');
 
-        client.send('exec', function(err, results) {
+        client.call('exec', function(err, results) {
           assert.deepEqual(
               [['key1', 'value1'], ['key2', 'value2'], ['key3', 'value3']],
               results);

@@ -27,10 +27,10 @@ var redjs = require('../');
 describe('Client', function() {
   var client = redjs.createClient();
 
-  describe('#send()', function() {
+  describe('#call()', function() {
     it('when disconnected #1', function(done) {
       assert.strictEqual(client.mode, 0); // OFFLINE
-      client.send('ABC', function(err) {
+      client.call('ABC', function(err) {
         assert(err);
         done();
       });
@@ -42,7 +42,20 @@ describe('Client', function() {
         assert(err);
         done();
       });
-      client.send('ABC');
+      client.call('ABC');
+    });
+  });
+
+  describe('#close()', function() {
+    it('when disconnected #1', function(done) {
+      assert.strictEqual(client.mode, 0); // OFFLINE
+      client.close(done);
+    });
+
+    it('when disconnected #2', function(done) {
+      assert.strictEqual(client.mode, 0); // OFFLINE
+      client.close();
+      done();
     });
   });
 
@@ -64,16 +77,16 @@ describe('Client', function() {
 
   describe('example', function() {
     it('should work, it\'s an example.', function(done) {
-      client.send(['SET', 'keyA', 'listA']);
-      client.send(['GET', 'keyA'], function(err, reply) {
+      client.call(['SET', 'keyA', 'listA']);
+      client.call(['GET', 'keyA'], function(err, reply) {
         if (err) {
           return console.log(err.message);
         }
 
         // null is redis way to say: it does not exist.
         if (reply !== null) {
-          client.send(['RPUSH', reply, 'some', 'list', 'elements']);
-          client.send(['LRANGE', reply, '0', '-1'], function(err, reply) {
+          client.call(['RPUSH', reply, 'some', 'list', 'elements']);
+          client.call(['LRANGE', reply, 0, -1], function(err, reply) {
             if (err) {
               done(err);
             } else if (reply.indexOf('some') > -1 &&
@@ -85,29 +98,29 @@ describe('Client', function() {
           });
         }
       });
-      client.send('DEL', 'keyA', 'listA');
+      client.call('DEL', 'keyA', 'listA');
     });
   });
 
-  describe('#send()', function() {
+  describe('#call()', function() {
     it('set value', function(done) {
       assert.strictEqual(client.mode, 3); // COMMAND
 
-      client.send(['SET', 'testkey', 'a'], function(err, value) {
+      client.call(['SET', 'testkey', 'a'], function(err, value) {
         assert.strictEqual(value, 'OK');
         done();
       });
     });
 
     it('get value', function(done) {
-      client.send(['GET', 'testkey'], function(err, value) {
+      client.call(['GET', 'testkey'], function(err, value) {
         assert.strictEqual(value, 'a');
         done();
       });
     });
 
     it('should return error', function(done) {
-      client.send('INVALID_COMMAND', function(err, value) {
+      client.call('INVALID_COMMAND', function(err, value) {
         assert(err);
         assert.strictEqual(err.message,
             'ERR unknown command \'INVALID_COMMAND\'');
@@ -122,7 +135,7 @@ describe('Client', function() {
             'ERR unknown command \'INVALID_COMMAND\'');
         done();
       });
-      client.send('INVALID_COMMAND');
+      client.call('INVALID_COMMAND');
     });
   });
 
@@ -137,7 +150,7 @@ describe('Client', function() {
       }
 
       client.once('subscribe', ready);
-      client.send(['SUBSCRIBE', 'testChannel'], ready);
+      client.call(['SUBSCRIBE', 'testChannel'], ready);
     });
   });
 

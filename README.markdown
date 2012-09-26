@@ -11,10 +11,6 @@ Stability: 1 - Experimental
  - lazy-loading components
  - [fast](https://gist.github.com/3773249)
 
-#### TODO
- - cluster & failover
- - consistent hashing
-
 ## install
 ```
 npm install redjs
@@ -29,16 +25,16 @@ client.connect(function(err) {
     return console.log(err.message);
   }
 
-  client.send(['SET', 'keyA', 'listA']);
-  client.send(['GET', 'keyA'], function(err, reply) {
+  client.call(['SET', 'keyA', 'listA']);
+  client.call(['GET', 'keyA'], function(err, reply) {
     if (err) {
       return console.log(err.message);
     }
 
     // null is redis way to say: it does not exist.
     if (reply !== null) {
-      client.send(['RPUSH', reply, 'some', 'list', 'elements']);
-      client.send(['LRANGE', reply, '0', '-1'], function(err, reply) {
+      client.call(['RPUSH', reply, 'some', 'list', 'elements']);
+      client.call(['LRANGE', reply, '0', '-1'], function(err, reply) {
         console.log(err, reply);
       });
     }
@@ -122,17 +118,17 @@ client.connect(function(err) {
 });
 ```
 
-#### client.send(var_args, opt_callback)
+#### client.call(var_args, opt_callback)
 ```js
-client.send('SET', 'keyA', '1');
-client.send('KEYS', '*', function(err, reply) {
+client.call('SET', 'keyA', '1');
+client.call('KEYS', '*', function(err, reply) {
   console.log(err, reply);
 });
 ```
 Or use an `Array` as 1st argument
 
 ```js
-client.send(['REM', 'keyA', 'keyB', 'keyC'], function(err, replies) {
+client.call(['REM', 'keyA', 'keyB', 'keyC'], function(err, replies) {
   console.log(replies);
 });
 ```

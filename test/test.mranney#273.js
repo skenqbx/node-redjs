@@ -41,8 +41,8 @@ describe('mranney#273', function() {
   it('should work once', function(done) {
     var client = redjs.createClient();
     client.connect(function(err) {
-      client.send(values, function(err, results) {
-        client.send('zrange', key, '0', '100', function(err, results) {
+      client.call(values, function(err, results) {
+        client.call('zrange', key, '0', '100', function(err, results) {
           var good = 0, len = results.length;
 
           for (i = 0; i < len; ++i) {
@@ -51,7 +51,7 @@ describe('mranney#273', function() {
             }
           }
           assert.strictEqual(good, 100);
-          client.send('del', key, done);
+          client.call('del', key, done);
         });
       });
     });
@@ -60,8 +60,8 @@ describe('mranney#273', function() {
   it('should work twice', function(done) {
     var client = redjs.createClient();
     client.connect(function(err) {
-      client.send(values, function(err, results) {
-        client.send('zrange', key, '0', '100', function(err, results) {
+      client.call(values, function(err, results) {
+        client.call('zrange', key, '0', '100', function(err, results) {
           var good = 0, len = results.length;
 
           for (i = 0; i < len; ++i) {
@@ -70,7 +70,7 @@ describe('mranney#273', function() {
             }
           }
           assert.strictEqual(good, 100);
-          client.send('del', key, done);
+          client.call('del', key, done);
         });
       });
     });

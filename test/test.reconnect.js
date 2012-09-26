@@ -58,7 +58,7 @@ describe('reconnect', function() {
     client.once('reconnect', function(err) {
       done(err);
     });
-    killer.send('CLIENT', 'KILL',
+    killer.call('CLIENT', 'KILL',
         '127.0.0.1:' + client.connection.address().port);
   });
 
@@ -66,7 +66,7 @@ describe('reconnect', function() {
     client.once('reconnect', function(err) {
       done(err);
     });
-    killer.send('CLIENT', 'KILL',
+    killer.call('CLIENT', 'KILL',
         '127.0.0.1:' + client.connection.address().port);
   });
 
@@ -74,7 +74,7 @@ describe('reconnect', function() {
     client.once('reconnect', function(err) {
       done(err);
     });
-    killer.send('CLIENT', 'KILL',
+    killer.call('CLIENT', 'KILL',
         '127.0.0.1:' + client.connection.address().port);
   });
 });
