@@ -150,15 +150,15 @@ Create a new parser object. `Parser` extends `Stream`.
 `value` depends on type and reply.
 
 #### Event: 'parser_error'
-`funtion(err)`
+`function(err)`
 
 #### parser.write(buffer)
 
 ## tests
 ```
+make install
 make jshint
 make test
-make install-jscoverage
 make test-cov
 ```
 
