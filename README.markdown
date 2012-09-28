@@ -8,7 +8,7 @@ Stability: 1 - Experimental
 [![Build Status](https://secure.travis-ci.org/skenqbx/node-redjs.png)](http://travis-ci.org/skenqbx/node-redjs)
 
 #### features
- - unified request protocol
+ - support for all [commands](http://redis.io/commands)
  - [fast](https://gist.github.com/3773249)
  - dead simple api
  - ... and more than 95% test coverage
@@ -35,14 +35,14 @@ client.connect(function(err) {
 
     // null is redis's way to say: it does not exist.
     if (reply !== null) {
-      client.call(['RPUSH', reply, 'some', 'list', 'elements']);
-      client.call(['LRANGE', reply, 0, -1], function(err, reply) {
-        console.log(err, reply);
-      });
+      client
+          .call(['RPUSH', reply, 'some', 'list', 'elements'])
+          .call(['LRANGE', reply, 0, -1], function(err, reply) {
+            console.log(err, reply);
+          });
     }
   });
 });
-
 ```
 
 ## api
@@ -119,11 +119,14 @@ client.connect(function(err) {
 ```
 
 #### client.call(var_args, opt_callback)
+Send a command to the redis server. Allows for chaining.
+
 ```js
-client.call('SET', 'keyA', '1');
-client.call('KEYS', '*', function(err, reply) {
-  console.log(err, reply);
-});
+client
+    .call('SET', 'keyA', '1')
+    .call('KEYS', '*', function(err, reply) {
+      console.log(err, reply);
+    });
 ```
 Or use an `Array` as 1st argument
 
@@ -159,6 +162,7 @@ Example `err` object:
   bytes: 19,
   c: 13 }
 ```
+
 #### parser.write(buffer)
 
 ## tests
