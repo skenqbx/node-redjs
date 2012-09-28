@@ -7,7 +7,7 @@ Stability: 1 - Experimental
 
 [![Build Status](https://secure.travis-ci.org/skenqbx/node-redjs.png)](http://travis-ci.org/skenqbx/node-redjs)
 
-#### Features
+#### features
  - unified request protocol
  - [fast](https://gist.github.com/3773249)
  - dead simple api
