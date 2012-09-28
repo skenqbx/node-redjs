@@ -54,7 +54,7 @@ describe('reconnect', function() {
     });
   });
 
-  it('reconnect #1', function(done) {
+  it('try #1', function(done) {
     client.once('reconnect', function(err) {
       done(err);
     });
@@ -62,7 +62,7 @@ describe('reconnect', function() {
         '127.0.0.1:' + client.connection.address().port);
   });
 
-  it('reconnect #2', function(done) {
+  it('try #2', function(done) {
     client.once('reconnect', function(err) {
       done(err);
     });
@@ -70,9 +70,11 @@ describe('reconnect', function() {
         '127.0.0.1:' + client.connection.address().port);
   });
 
-  it('reconnect #3', function(done) {
-    client.once('reconnect', function(err) {
-      done(err);
+  it('limit reached', function(done) {
+    client._reconnectCount = client._maxReconnectCount;
+
+    client.once('close', function() {
+      done();
     });
     killer.call('CLIENT', 'KILL',
         '127.0.0.1:' + client.connection.address().port);

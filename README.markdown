@@ -48,20 +48,18 @@ client.connect(function(err) {
 
 ## api
 ### createClient(opt_options)
-Create a new client object. `Client` extends `events.EventEmitter`.
+Create a new `Client` object. `Client` extends `events.EventEmitter`.
 
 The Client is a bare metal network client for redis. It provides only a basic interface for issuing commands, nothing fancy.
 
 `opt_options` contains optional configuration with the following defaults:
 
 ```js
-{
-  host: '127.0.0.1',
+{ host: '127.0.0.1',
   port: 6379,
   reconnect: true,
   maxReconnectCount: 10,
-  reconnectInterval: 5000
-}
+  reconnectInterval: 5000 }
 ```
 
 #### Event: 'connect'
@@ -87,6 +85,8 @@ Emitted when the underlying socket is fully closed.
 `function()`
 
 #### Event: 'parser_error'
+See `Parser`.
+
 `function(err)`
 
 #### Event: 'error'
@@ -129,15 +129,15 @@ client.call('KEYS', '*', function(err, reply) {
 Or use an `Array` as 1st argument
 
 ```js
-client.call(['REM', 'keyA', 'keyB', 'keyC'], function(err, replies) {
-  console.log(replies);
+client.call(['DEL', 'keyA', 'keyB', 'keyC'], function(err, reply) {
+  console.log(reply);
 });
 ```
 #### client.close(opt_callback)
 `opt_callback` is an optional `function()` that is registered as 'close' event listener.
 
 ### createParser()
-Creates a new parser object. `Parser` extends `Stream`.
+Creates a new `Parser` object. `Parser` extends `Stream`.
 
 #### Event: 'reply'
 `function(type, value)`
@@ -147,8 +147,19 @@ Creates a new parser object. `Parser` extends `Stream`.
 `value` depends on type.
 
 #### Event: 'parser_error'
+Emitted when the parser encounters unexpected data.
+
 `function(err)`
 
+Example `err` object:
+
+```js
+{ message: 'Expected +, -, :, $ or *',
+  rx: '',
+  offset: 12,
+  bytes: 19,
+  c: 13 }
+```
 #### parser.write(buffer)
 
 ## tests

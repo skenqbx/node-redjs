@@ -180,4 +180,22 @@ describe('parser', function() {
 
     parser.write(msg2);
   });
+
+  it('error handling', function(done) {
+    var parser = redjs.createParser();
+    var ex = 0;
+
+    parser.on('parser_error', function(err) {
+      ++ex;
+    });
+
+    parser.on('reply', function(type, value) {
+      assert.strictEqual(type, 36);
+      assert.strictEqual(value, 'a');
+      assert.strictEqual(ex, 8);
+      done();
+    });
+
+    parser.write(new Buffer('gar*1\rbage\r$1\r\na\r\n'));
+  });
 });
