@@ -11,7 +11,6 @@ Stability: 1 - Experimental
  - unified request protocol
  - [fast](https://gist.github.com/3773249)
  - dead simple api
- - lazy-loading components
  - ... and more than 95% test coverage
 
 ## install
