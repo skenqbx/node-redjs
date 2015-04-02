@@ -1,6 +1,8 @@
 # redjs [![Build Status](https://secure.travis-ci.org/skenqbx/node-redjs.png)](http://travis-ci.org/skenqbx/node-redjs)
 _A redis library for node.js_
 
+# DEPRECATED
+
 ```js
 Stability: 1 - Experimental
 ```
